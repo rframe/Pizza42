@@ -13,13 +13,14 @@ import {AuthenticatedUser} from '../../models/interfaces/authenticated-user';
   providedIn: 'root',
 })
 export class AuthenticationService {
+  undefined;
   private _auth0 = new auth0.WebAuth({
     clientID: environment.auth0_clientID,
     domain: environment.auth0_domain,
     responseType: 'token id_token',
     audience: environment.auth0_audience,
     redirectUri: environment.auth0_redirectUri,
-    scope: 'openid email profile'
+    scope: 'openid profile email'
   });
 
   private _authenticatedUser$ = new BehaviorSubject<AuthenticatedUser>(null);
@@ -54,7 +55,6 @@ export class AuthenticationService {
   handleAuthentication(): void {
     this._auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        console.log(authResult);
         // This seems to cause the navigation to Home to fail, has will be removed upon navigation anyways
         // window.location.hash = '';
         this.setSession(authResult);
@@ -117,6 +117,19 @@ export class AuthenticationService {
     } as AuthenticatedUser;
 
     this._authenticatedUser$.next(authenticatedUser);
+  }
+
+  getUserProfile() {
+    const userProfile = new BehaviorSubject<AuthenticatedUser>(this.undefined);
+    const accessToken = this._accessToken;
+    if (accessToken) {
+      this._auth0.client.userInfo(accessToken, (err, profile) => {
+        userProfile.next(profile);
+      });
+    } else {
+      userProfile.next(null);
+    }
+    return userProfile.asObservable();
   }
 
   /**
