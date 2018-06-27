@@ -6,6 +6,8 @@ import {LayoutModule} from './domain/layout/layout.module';
 import {AppRoutingModule} from './app-routing.module';
 import { NotFoundComponent } from './feature/not-found/not-found.component';
 import {HttpClientModule} from '@angular/common/http';
+import {ToastrModule} from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     LayoutModule,
     AppRoutingModule,
+    BrowserAnimationsModule, // required animations module
+    ToastrModule.forRoot(), // ToastrModule added
   ],
   providers: [],
   bootstrap: [AppComponent]

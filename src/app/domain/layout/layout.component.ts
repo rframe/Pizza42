@@ -5,6 +5,7 @@ import {PingService} from '../../service/ping/ping.service';
 import {take} from 'rxjs/internal/operators';
 import {AuthenticatedUser} from '../../models/interfaces/authenticated-user';
 import {logValue} from '../../models/rxjs/operators';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-layout',
@@ -15,7 +16,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   isAuthenticated$: Observable<AuthenticatedUser>;
 
   private _subscriptions: Array<Subscription> = [];
-  constructor(private _authenticationService: AuthenticationService, private _ping: PingService) {
+  constructor(private _authenticationService: AuthenticationService, private _ping: PingService, private _toastr: ToastrService) {
   }
 
   /**
@@ -47,15 +48,28 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Show the Successful server response as a toast message
+   * @param serverRespons
+   */
+  serverResultToast(serverRespons) {
+    if (!!serverRespons) {
+      this._toastr.success(`Result: ${typeof serverRespons === 'string' ? serverRespons : JSON.stringify(serverRespons)}`);
+    }
+  }
+
+  /**
    * Test a call to the server that is not secured with authorization
    */
   testInsecureCall() {
+
       this._ping.ping()
         .pipe(
           take(1),
-          logValue
+          // logValue
         )
-        .toPromise();
+        .toPromise()
+        .then(this.serverResultToast)
+      ;
   }
 
   /**
@@ -65,9 +79,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
       this._ping.pingSecure()
         .pipe(
           take(1),
-          logValue
+          // logValue
         )
-        .toPromise();
+        .toPromise()
+        .then(this.serverResultToast);
   }
 
   /**
@@ -77,8 +92,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
       this._ping.claims()
         .pipe(
           take(1),
-          logValue
+          // logValue
         )
-        .toPromise();
+        .toPromise()
+        .then(this.serverResultToast);
   }
 }

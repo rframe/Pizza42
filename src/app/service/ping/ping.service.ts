@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {map, catchError} from 'rxjs/internal/operators';
 import {Observable} from 'rxjs/index';
 import {AuthenticationService} from '../authentication/authentication.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class PingService {
    * @param {AuthenticationService} _authentication - Auth0 Authentication service
    */
   constructor(private _http: HttpClient,
-              private _authentication: AuthenticationService) { }
+              private _authentication: AuthenticationService,
+              private _toastr: ToastrService) { }
 
   /**
    * Get the claims for the current user from the server
@@ -52,7 +54,18 @@ export class PingService {
     const defaultOptions = this.defaultOptions(options);
     return this._http.get<t>(url, defaultOptions)
       .pipe(
-        catchError((x) => {
+        catchError((error: HttpErrorResponse) => {
+          if (error.error instanceof ErrorEvent) {
+            // A client-side or network error occurred. Handle it accordingly.
+            this._toastr.error('An error occurred:', error.error.message);
+          } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong,
+            this._toastr.error(
+              `Backend returned code ${error.status}, ` +
+              `body was: ${error.error}`);
+          }
+
           return Observable.create(y => { y.next(this.undefined); });
         })
       );
