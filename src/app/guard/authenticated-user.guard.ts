@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
-import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild} from '@angular/router';
+import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild, Router} from '@angular/router';
 import { Observable } from 'rxjs';
 import {AuthenticationService} from '../service/authentication/authentication.service';
-import {logValue} from '../models/rxjs/operators';
-import {AuthenticatedUser} from '../models/interfaces/authenticated-user';
-import {map} from 'rxjs/internal/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticatedUserGuard implements CanActivate, CanActivateChild {
 
-  constructor(private _authenticationService: AuthenticationService) {
+  constructor(private _authenticationService: AuthenticationService, private _router: Router) {
   }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    return this._authenticationService.isAuthenticated;
+    if (!this._authenticationService.isAuthenticated) {
+      // redirect to home page
+      this._router.navigate(['/', 'Home']);
+      return false;
+    }
+    return true;
   }
 
   canActivateChild(childRoute: ActivatedRouteSnapshot,

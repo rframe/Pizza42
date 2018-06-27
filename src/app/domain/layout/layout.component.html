@@ -6,7 +6,7 @@
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/', 'Home']">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
@@ -15,27 +15,29 @@
       <li class="nav-item">
         <a class="nav-link" (click)="testSecureCall()">Test Secure</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" (click)="listClaims()" *ngIf="authenticatedUser.isAuthenticated && authenticatedUser.emailAddressVerified">Show Claims</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" [routerLink]="['/', 'SomeLink']">404</a>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/', 'Order']" *ngIf="authenticatedUser.isAuthenticated && authenticatedUser.emailAddressVerified">Order Pizza</a>
       </li>
       <!--<li class="nav-item">-->
-        <!--<a class="nav-link disabled" href="#">Disabled</a>-->
+        <!--<a class="nav-link" [routerLink]="['/', 'SomeLink']">404</a>-->
       <!--</li>-->
-      <!--<li class="nav-item dropdown">-->
-        <!--<a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>-->
-        <!--<div class="dropdown-menu" aria-labelledby="dropdown01">-->
-          <!--<a class="dropdown-item" href="#">Action</a>-->
-          <!--<a class="dropdown-item" href="#">Another action</a>-->
-          <!--<a class="dropdown-item" href="#">Something else here</a>-->
-        <!--</div>-->
-      <!--</li>-->
-      <li class="nav-item">
-        <ng-template #loginButton><a class="nav-link" (click)="login()">Log In</a></ng-template>
-        <a class="nav-link" (click)="logout()" *ngIf="authenticatedUser.isAuthenticated; else loginButton">Log Out</a>
+      <li class="nav-item dropdown" *ngIf="authenticatedUser.isAuthenticated; else loginMenu">
+        <a class="nav-link dropdown-toggle" href="https://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="user-email-address">{{authenticatedUser.emailAddress}}</div>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" [routerLink]="['/', 'Profile']" routerLinkActive="active">Profile</a>
+          <a class="dropdown-item" (click)="logout()">Log Out</a>
+        </div>
       </li>
+      <ng-template #loginMenu>
+        <li class="nav-item">
+          <a class="nav-link" (click)="login()">Log In</a>
+        </li>
+      </ng-template>
     </ul>
     <!--<form class="form-inline my-2 my-lg-0">-->
       <!--<input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">-->

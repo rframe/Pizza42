@@ -1,2 +1,8 @@
 :host {
+  .user-email-address {
+    max-width: 20rem;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 }

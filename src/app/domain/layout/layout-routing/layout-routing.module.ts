@@ -3,6 +3,8 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {LayoutComponent} from '../layout.component';
 import {NotFoundComponent} from '../../../feature/not-found/not-found.component';
+import {AuthenticatedUserGuard} from '../../../guard/authenticated-user.guard';
+import {VerifiedEmailGuard} from '../../../guard/verified-email.guard';
 
 const routes: Routes = [
   {
@@ -17,6 +19,16 @@ const routes: Routes = [
       {
         path: 'Home',
         loadChildren: '../../../feature/home/home.module#HomeModule'
+      },
+      {
+        path: 'Profile',
+        loadChildren: '../../../feature/profile/profile.module#ProfileModule',
+        canActivate: [AuthenticatedUserGuard]
+      },
+      {
+        path: 'Order',
+        loadChildren: '../../../feature/order/order.module#OrderModule',
+        canActivate: [AuthenticatedUserGuard, VerifiedEmailGuard]
       },
       {
         path: 'callback',
