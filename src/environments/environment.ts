@@ -9,7 +9,10 @@ export const environment = {
   auth0_clientID: '',
   auth0_domain: '',
   auth0_audience: '',
-  auth0_redirectUri: '',
+  auth0_redirectUri: 'http://localhost:4200/callback',
+  api_location: 'http://localhost:57744',
+  // api_location: 'http://localhost:5000',
+  // api_location: 'https://pizza42api.azurewebsites.net',
 };
 
 /*

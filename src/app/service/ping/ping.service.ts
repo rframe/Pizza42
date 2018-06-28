@@ -4,6 +4,7 @@ import {map, catchError} from 'rxjs/internal/operators';
 import {Observable} from 'rxjs/index';
 import {AuthenticationService} from '../authentication/authentication.service';
 import {ToastrService} from 'ngx-toastr';
+import {environment} from './../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -51,8 +52,13 @@ export class PingService {
    * @returns {Observable<t>}
    */
   private get<t>(url: string, options = null) {
+    let path = environment.api_location;
+    if (url.indexOf('/') !== 0) {
+      path += '/';
+    }
+    path += url;
     const defaultOptions = this.defaultOptions(options);
-    return this._http.get<t>(url, defaultOptions)
+    return this._http.get<t>(`${path}`, defaultOptions)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.error instanceof ErrorEvent) {

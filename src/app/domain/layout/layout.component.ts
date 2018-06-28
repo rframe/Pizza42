@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../../service/authentication/authentication.service';
 import {Observable, Subscription} from 'rxjs/index';
 import {PingService} from '../../service/ping/ping.service';
-import {take} from 'rxjs/internal/operators';
+import {map, take} from 'rxjs/internal/operators';
 import {AuthenticatedUser} from '../../models/interfaces/authenticated-user';
 import {logValue} from '../../models/rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
@@ -14,8 +14,8 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   isAuthenticated$: Observable<AuthenticatedUser>;
-
   private _subscriptions: Array<Subscription> = [];
+
   constructor(private _authenticationService: AuthenticationService, private _ping: PingService, private _toastr: ToastrService) {
   }
 
@@ -62,39 +62,39 @@ export class LayoutComponent implements OnInit, OnDestroy {
    */
   testInsecureCall() {
 
-      this._ping.ping()
-        .pipe(
-          take(1),
-          // logValue
-        )
-        .toPromise()
-        .then(this.serverResultToast)
-      ;
+    this._ping.ping()
+      .pipe(
+        take(1),
+        // logValue
+      )
+      .toPromise()
+      .then((result) => this.serverResultToast(result));
   }
 
   /**
    * Test a call to the server that is secured with authorization
    */
   testSecureCall() {
-      this._ping.pingSecure()
-        .pipe(
-          take(1),
-          // logValue
-        )
-        .toPromise()
-        .then(this.serverResultToast);
+    this._ping.pingSecure()
+      .pipe(
+        take(1),
+        // logValue
+      )
+      .toPromise()
+      .then((result) => this.serverResultToast(result));
   }
 
   /**
    * List Claims for the currently logged in user
    */
   listClaims() {
-      this._ping.claims()
-        .pipe(
-          take(1),
-          // logValue
-        )
-        .toPromise()
-        .then(this.serverResultToast);
+    this._ping.claims()
+      .pipe(
+        take(1),
+        // logValue,
+        map((result: Array<any>) => `You have ${result.length} claims`)
+      )
+      .toPromise()
+      .then((result) => this.serverResultToast(result));
   }
 }
