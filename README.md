@@ -6,6 +6,15 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - [Yarn](https://yarnpkg.com/lang/en/)
 - [Angular CLI](https://cli.angular.io/)
 
+## Configure App
+ - update the environemtn files `(src\environments\environment.ts, src\environments\environment.prod.ts)`
+ - Files should have the following values set
+ - auth0_clientID
+ - auth0_domain
+ - auth0_audience
+ - auth0_redirectUri, angular application url that the user will be redirected to after login `already set`
+ - api_location, this is the location of the companion api `already set`
+
 ## Run Project Locally
  - open command prompt to root directory
  - Run `yarn` to install package dependencies
