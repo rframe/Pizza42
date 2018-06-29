@@ -11,11 +11,11 @@
     <div>
       Email: {{ userProfile.email }}
     </div>
-    <div *ngIf="userProfile['http://localhost:5000googleConnections'] || (connections$ | async) as googleConnections">
+    <div *ngIf="userProfile['https://pizza42.azurewebsites.netgoogleConnections'] || (connections$ | async) as googleConnections">
       Google Connections: {{ googleConnections }}
     </div>
     <div>
-      Gender: {{ (userProfile.gender || userProfile['http://localhost:5000gender'])  || 'unknown' }}
+      Gender: {{ (userProfile.gender || userProfile['https://pizza42.azurewebsites.netgender'])  || 'unknown' }}
     </div>
     <!--<pre class="full-profile">{{ profile | json }}</pre>-->
   </div>
