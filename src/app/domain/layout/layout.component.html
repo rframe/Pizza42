@@ -16,7 +16,7 @@
         <a class="nav-link" (click)="testSecureCall()">Test Secure</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" (click)="listClaims()" *ngIf="authenticatedUser.isAuthenticated && authenticatedUser.emailAddressVerified">Show Claims</a>
+        <a class="nav-link" (click)="listClaims()" *ngIf="authenticatedUser.isAuthenticated && authenticatedUser.emailAddressVerified">Show Claims Count</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/', 'Order']" *ngIf="authenticatedUser.isAuthenticated && authenticatedUser.emailAddressVerified">Order Pizza</a>
