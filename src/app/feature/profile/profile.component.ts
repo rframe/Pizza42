@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
+import {AuthPingService} from '../../service/ping/auth.ping.service';
 
 @Component({
   selector: 'app-profile',
@@ -8,11 +9,12 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   profile;
-  constructor(private _route: ActivatedRoute) { }
+  connections$;
+  constructor(private _route: ActivatedRoute, private _ping: AuthPingService) { }
 
   ngOnInit() {
-
     this.profile = this._route.snapshot.data['profile'];
+    this.connections$ = this._ping.googleConnections$;
   }
 
 }

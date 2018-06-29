@@ -5,6 +5,9 @@ import {BehaviorSubject, Observable} from 'rxjs/index';
 import {environment} from '../../../environments/environment';
 import {authenticationKeys} from '../../models/enums/authentication-keys';
 import {AuthenticatedUser} from '../../models/interfaces/authenticated-user';
+import {ToastrService} from 'ngx-toastr';
+import {AuthPingService} from '../ping/auth.ping.service';
+import {take} from 'rxjs/operators';
 
 (window as any).global = window;
 
@@ -14,6 +17,7 @@ import {AuthenticatedUser} from '../../models/interfaces/authenticated-user';
 })
 export class AuthenticationService {
   undefined;
+
   private _auth0 = new auth0.WebAuth({
     clientID: environment.auth0_clientID,
     domain: environment.auth0_domain,
@@ -37,7 +41,7 @@ export class AuthenticationService {
    * Class Constructor Function
    * @param {Router} router
    */
-  constructor(private router: Router) {
+  constructor(private router: Router, private _toastr: ToastrService, private _ping: AuthPingService) {
     this.updateAuthenticatedUser$();
   }
 
@@ -58,6 +62,20 @@ export class AuthenticationService {
         // This seems to cause the navigation to Home to fail, has will be removed upon navigation anyways
         // window.location.hash = '';
         this.setSession(authResult);
+
+        // update google connections
+        this._ping.updateGoogleConnections(this.bearerToken)
+          .pipe(
+            take(1)
+          )
+          .toPromise();
+
+        if (!this._emailVerified) {
+          this._toastr.warning('Please verify your email address, then log out and log back in for full sit functionality',
+            'Unverified Email Address'
+            // , {} as IndividualConfig
+          );
+        }
         this.router.navigate(['/Home']);
       } else if (err) {
         this.router.navigate(['/Home']);
@@ -120,7 +138,7 @@ export class AuthenticationService {
   }
 
   getUserProfile() {
-    const userProfile = new BehaviorSubject<AuthenticatedUser>(this.undefined);
+    const userProfile = new BehaviorSubject<any>(this.undefined);
     const accessToken = this._accessToken;
     if (accessToken) {
       this._auth0.client.userInfo(accessToken, (err, profile) => {
