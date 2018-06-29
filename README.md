@@ -7,7 +7,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - [Angular CLI](https://cli.angular.io/)
 
 ## Configure App
- - update the environemtn files `(src\environments\environment.ts, src\environments\environment.prod.ts)`
+ - update the environment files `(src\environments\environment.ts, src\environments\environment.prod.ts)`
  - Files should have the following values set
  - auth0_clientID
  - auth0_domain
